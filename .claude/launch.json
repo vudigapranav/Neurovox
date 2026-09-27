@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "neurovox",
+      "runtimeExecutable": "java",
+      "runtimeArgs": ["-jar", "target/neurovox.jar"],
+      "port": 8080
+    }
+  ]
+}

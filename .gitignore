@@ -1,0 +1,16 @@
+# Build output
+target/
+
+# Visual check output (screenshots, results.json)
+visual-check-output/
+
+# Local data (recordings and database arrive in later sprints)
+data/
+*.db
+*.db-journal
+
+# OS / editor noise
+.DS_Store
+.idea/
+*.iml
+.vscode/

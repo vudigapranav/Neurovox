@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#050309">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="Neurovox is a local, Java-based research prototype that measures acoustic patterns in the voice. It does not diagnose any condition.">
+    <title>Neurovox</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23c79bff' stroke-width='2' stroke-dasharray='1.2 2.6'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="js/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="stage" aria-hidden="true">
+      <div class="stage-glow"></div>
+      <canvas id="orbFallback" class="orb-fallback"></canvas>
+      <canvas id="orbCanvas" class="orb-canvas"></canvas>
+      <div class="stage-shade"></div>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Neurovox, back to top">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="11.5" />
+          <circle class="brand-core" cx="16" cy="16" r="3" />
+        </svg>
+        <span class="brand-word">neurovox</span>
+      </a>
+      <nav class="site-nav" aria-label="Sections">
+        <a href="#session">Session</a>
+        <a href="#method">Method</a>
+        <a href="#boundaries">Boundaries</a>
+      </nav>
+      <span class="header-tag">Research prototype</span>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Acoustic voice analysis</p>
+          <h1 id="hero-title">Your voice<br>leaves a <em>trace.</em></h1>
+          <p class="lede">Neurovox guides you through four short voice tasks, then measures pitch, cycle-to-cycle stability and noise with signal processing written in Java. Recordings stay on this computer.</p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#session">
+              Begin a voice session
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>
+            </a>
+            <button class="button button-quiet" id="micToggle" type="button" aria-pressed="false" aria-describedby="privacyNote">
+              <span class="mic-glyph" aria-hidden="true"></span>
+              <span id="micLabel">Let the orb listen</span>
+            </button>
+          </div>
+
+          <div class="listen-state">
+            <span class="level-meter" id="levelMeter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            <p id="listenStatus" role="status" aria-live="polite"></p>
+          </div>
+          <p class="privacy-note" id="privacyNote">The preview analyses sound inside your browser to animate the orb. Nothing is recorded, saved or sent anywhere.</p>
+        </div>
+
+        <button class="orb-hit" id="orbHit" type="button" aria-label="Voice orb. Use arrow keys to tilt it and Enter to send a wave through it.">
+          <span class="orb-hint" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> tilt <kbd>Enter</kbd> wave</span>
+        </button>
+
+        <dl class="hero-facts">
+          <div><dt>Tasks</dt><dd>4 guided</dd></div>
+          <div><dt>Voice time</dt><dd>≈ 1 min</dd></div>
+          <div><dt>Storage</dt><dd>This computer</dd></div>
+        </dl>
+      </section>
+
+      <div class="content">
+        <section class="section session" id="session" aria-labelledby="session-title">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">The session</p>
+            <h2 id="session-title">Four tasks.<br><em>One sitting.</em></h2>
+            <p class="section-intro">Each task asks the voice to do something different. Together they take about a minute of speaking, grouped into one session you can review later.</p>
+          </header>
+
+          <div class="task-timeline" data-reveal aria-hidden="true">
+            <span style="--share: 5">5 s</span>
+            <span style="--share: 6">6 s</span>
+            <span style="--share: 20">20 s</span>
+            <span style="--share: 30">30 s</span>
+          </div>
+
+          <ol class="task-list">
+            <li class="task" data-reveal>
+              <span class="task-index">01</span>
+              <div class="task-body">
+                <h3>Sustained vowel</h3>
+                <p>Hold a steady “aah” at a comfortable pitch and loudness.</p>
+              </div>
+              <p class="task-measures">Pitch, cycle-to-cycle timing and amplitude, voice-to-noise balance. <strong>The only task used by the research indicator.</strong></p>
+              <span class="task-time">≈ 5 s</span>
+            </li>
+            <li class="task" data-reveal>
+              <span class="task-index">02</span>
+              <div class="task-body">
+                <h3>Syllable repetition</h3>
+                <p>Repeat “pa-ta-ka” as quickly and clearly as you can.</p>
+              </div>
+              <p class="task-measures">Descriptive measurements of rhythm and articulation.</p>
+              <span class="task-time">≈ 6 s</span>
+            </li>
+            <li class="task" data-reveal>
+              <span class="task-index">03</span>
+              <div class="task-body">
+                <h3>Reading passage</h3>
+                <p>Read a short fixed passage aloud at your usual pace.</p>
+              </div>
+              <p class="task-measures">Descriptive measurements of connected speech.</p>
+              <span class="task-time">≈ 20 s</span>
+            </li>
+            <li class="task" data-reveal>
+              <span class="task-index">04</span>
+              <div class="task-body">
+                <h3>Free speech</h3>
+                <p>Talk about anything — your day, a place, a recipe.</p>
+              </div>
+              <p class="task-measures">Descriptive measurements of spontaneous speech.</p>
+              <span class="task-time">≈ 30 s</span>
+            </li>
+          </ol>
+
+          <div class="session-cta" data-reveal>
+            <a class="button button-primary" href="record.html" aria-describedby="recorderNote">
+              Start recording
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>
+            </a>
+            <p id="recorderNote">You will be asked for microphone access. Each take can be replayed and redone before it is saved on this computer.</p>
+          </div>
+        </section>
+
+        <section class="section method" id="method" aria-labelledby="method-title">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Method</p>
+            <h2 id="method-title">From sound<br>to <em>signal.</em></h2>
+            <p class="section-intro">Every measurement is computed by code the team wrote and can explain, then checked against reference measurements before it is trusted.</p>
+          </header>
+
+          <ol class="steps">
+            <li data-reveal>
+              <span class="step-label">01 · Capture</span>
+              <h3>Raw voice, as it is</h3>
+              <p>The browser captures mono audio at its real sample rate and hands it to the local Java server.</p>
+            </li>
+            <li data-reveal>
+              <span class="step-label">02 · Condition</span>
+              <h3>Clean and check</h3>
+              <p>Java removes DC offset, resamples to 16&nbsp;kHz and rejects silence, clipping or bad durations.</p>
+            </li>
+            <li data-reveal>
+              <span class="step-label">03 · Measure</span>
+              <h3>Find each cycle</h3>
+              <p>Pitch is tracked with autocorrelation and YIN, then individual vocal pulses are located for jitter, shimmer and HNR.</p>
+            </li>
+            <li data-reveal>
+              <span class="step-label">04 · Report</span>
+              <h3>Plain language</h3>
+              <p>Results are explained simply, with the technical names kept alongside for review.</p>
+            </li>
+          </ol>
+
+          <figure class="periodicity" data-reveal>
+            <div class="strip-row">
+              <span class="strip-name">Steady</span>
+              <svg class="strip" data-strip="steady" role="img" aria-label="Evenly spaced bars of equal height"></svg>
+              <span class="strip-note">Even timing, even amplitude</span>
+            </div>
+            <div class="strip-row">
+              <span class="strip-name">Jitter</span>
+              <svg class="strip" data-strip="jitter" role="img" aria-label="Bars of equal height with uneven spacing"></svg>
+              <span class="strip-note">Cycle length varies</span>
+            </div>
+            <div class="strip-row">
+              <span class="strip-name">Shimmer</span>
+              <svg class="strip" data-strip="shimmer" role="img" aria-label="Evenly spaced bars with uneven heights"></svg>
+              <span class="strip-note">Cycle amplitude varies</span>
+            </div>
+            <figcaption>Illustration. Each bar stands for one vocal cycle: spacing is its period, height is its amplitude. Not a measurement.</figcaption>
+          </figure>
+        </section>
+
+        <section class="section boundaries" id="boundaries" aria-labelledby="boundaries-title">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Boundaries</p>
+            <h2 id="boundaries-title">What it is,<br><em>and what it isn’t.</em></h2>
+          </header>
+          <div class="boundary-grid">
+            <div class="boundary" data-reveal>
+              <h3>Neurovox is</h3>
+              <ul>
+                <li>A Java Programming course end project</li>
+                <li>An acoustic measurement tool with explainable formulas</li>
+                <li>Local: recordings and results stay on this computer</li>
+              </ul>
+            </div>
+            <div class="boundary boundary-not" data-reveal>
+              <h3>Neurovox is not</h3>
+              <ul>
+                <li>A diagnosis of Parkinson’s disease or any condition</li>
+                <li>An estimate of disease stage or severity</li>
+                <li>Medical or treatment advice</li>
+              </ul>
+            </div>
+          </div>
+          <p class="boundary-note" data-reveal>Any classifier output is an experimental research indicator from the sustained vowel only, and it is shown only if validation supports it. If you have concerns about your health, speak with a clinician.</p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span class="brand-word">neurovox</span>
+      <span>Java Programming Course End Project · Research prototype, not a medical device</span>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+  </body>
+</html>
