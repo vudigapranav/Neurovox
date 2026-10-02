@@ -127,6 +127,20 @@ public final class RecordingStore {
         }
     }
 
+    /** Deletes the whole recordings folder (used by "delete all local data"). */
+    public void deleteAllRecordings() {
+        if (!Files.exists(root)) {
+            return;
+        }
+        try (Stream<Path> walk = Files.walk(root)) {
+            for (Path p : walk.sorted(Comparator.reverseOrder()).toList()) {
+                Files.deleteIfExists(p);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not delete the recordings folder", e);
+        }
+    }
+
     public Path sessionFolder(long sessionId) {
         if (sessionId <= 0) {
             throw new IllegalArgumentException("Invalid session id: " + sessionId);

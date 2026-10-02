@@ -30,9 +30,10 @@
         <span class="brand-word">neurovox</span>
       </a>
       <nav class="site-nav" aria-label="Sections">
-        <a href="#session">Session</a>
+        <a href="#guide">How to use</a>
+        <a href="#session">Tasks</a>
         <a href="#method">Method</a>
-        <a href="#boundaries">Boundaries</a>
+        <a href="history.html">History</a>
       </nav>
       <span class="header-tag">Research prototype</span>
     </header>
@@ -45,8 +46,8 @@
           <p class="lede">Neurovox guides you through four short voice tasks, then measures pitch, cycle-to-cycle stability and noise with signal processing written in Java. Recordings stay on this computer.</p>
 
           <div class="hero-actions">
-            <a class="button button-primary" href="#session">
-              Begin a voice session
+            <a class="button button-primary" href="record.html">
+              Start a guided session
               <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>
             </a>
             <button class="button button-quiet" id="micToggle" type="button" aria-pressed="false" aria-describedby="privacyNote">
@@ -74,6 +75,55 @@
       </section>
 
       <div class="content">
+        <section class="section guide" id="guide" aria-labelledby="guide-title">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">How to use Neurovox</p>
+            <h2 id="guide-title">Eight steps,<br><em>start to finish.</em></h2>
+            <p class="section-intro">The recorder walks you through each step on screen, with a progress bar at the top and a Back button on every step. This is the whole journey at a glance.</p>
+          </header>
+          <ol class="guide-list">
+            <li data-reveal>
+              <h3>Know what it measures</h3>
+              <p>Pitch, cycle-to-cycle timing (jitter), cycle loudness (shimmer) and voice-to-noise balance (HNR), computed in Java on this computer. It is a measurement tool, not a diagnosis, stage estimate or treatment advice.</p>
+            </li>
+            <li data-reveal>
+              <h3>Prepare a quiet room</h3>
+              <p>Close windows, switch off fans and music, sit upright and keep the microphone 20–30 cm from your mouth. Use the same microphone every time so sessions can be compared.</p>
+            </li>
+            <li data-reveal>
+              <h3>Allow the microphone</h3>
+              <p>Press “Allow microphone” and accept the browser’s prompt. Say “aah”: the level bar should reach the green zone and the orb should move. If access is blocked, the page shows how to unblock it in your browser.</p>
+            </li>
+            <li data-reveal>
+              <h3>Record the four tasks</h3>
+              <p>A steady “aah” (5 s), “pa-ta-ka” as fast as you can (6 s), a short passage read aloud (20 s), and free speech (30 s). Instructions and the text to read stay on screen while you record.</p>
+            </li>
+            <li data-reveal>
+              <h3>Start, stop, replay, retry, save</h3>
+              <p>Press Start: a 3-second countdown, then recording. Stop early once the minimum time has passed, or let the timer finish. “Review this recording” lets you play it back, record again, or save it. Java checks each saved take and tells you how to fix a take that is too quiet, clipped or not voiced.</p>
+            </li>
+            <li data-reveal>
+              <h3>Let Java process the recordings</h3>
+              <p>After the fourth take, the Java server resamples each recording to 16 kHz, tracks pitch, finds every vocal cycle in the steady vowel and computes the measurements. It takes a few seconds; nothing leaves this computer.</p>
+            </li>
+            <li data-reveal>
+              <h3>Read the measurements</h3>
+              <p>The report shows each number with a plain name, its technical name and what it means — without invented “normal ranges”. Compare against your own earlier sessions. The experimental research indicator is shown only if validation supports it; currently it does not, and the report explains why.</p>
+            </li>
+            <li data-reveal>
+              <h3>Review history, delete data</h3>
+              <p>History lists every session with a trend chart. Unfinished sessions can be continued. You can delete one session, or all local data, at any time.</p>
+            </li>
+          </ol>
+          <div class="session-cta" data-reveal>
+            <a class="button button-primary" href="record.html">
+              Start a guided session
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>
+            </a>
+            <a class="text-link" href="history.html">See earlier sessions</a>
+          </div>
+        </section>
+
         <section class="section session" id="session" aria-labelledby="session-title">
           <header class="section-head" data-reveal>
             <p class="eyebrow">The session</p>
@@ -209,7 +259,7 @@
               </ul>
             </div>
           </div>
-          <p class="boundary-note" data-reveal>Any classifier output is an experimental research indicator from the sustained vowel only, and it is shown only if validation supports it. If you have concerns about your health, speak with a clinician.</p>
+          <p class="boundary-note" data-reveal>Any classifier output is an experimental research indicator from the sustained vowel only, and it is shown only if validation supports it. At present the validation does not support it, so it is not shown. If you have concerns about your health, speak with a clinician.</p>
         </section>
       </div>
     </main>
@@ -217,6 +267,7 @@
     <footer class="site-footer">
       <span class="brand-word">neurovox</span>
       <span>Java Programming Course End Project · Research prototype, not a medical device</span>
+      <a href="history.html">History</a>
       <a href="#top">Back to top ↑</a>
     </footer>
   </body>

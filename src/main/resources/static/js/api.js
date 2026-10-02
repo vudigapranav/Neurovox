@@ -3,10 +3,11 @@
 import { toFloat32LittleEndian } from './pcm.js';
 
 export class ApiError extends Error {
-  constructor(status, code, message) {
+  constructor(status, code, message, details = null) {
     super(message);
     this.status = status;
     this.code = code;
+    this.details = details;   // the full JSON body, e.g. the quality report of a rejected take
   }
 }
 
@@ -26,7 +27,7 @@ async function request(method, path, { body, headers } = {}) {
   if (!response.ok) {
     const error = json?.error;
     throw new ApiError(response.status, error?.code || 'http_' + response.status,
-      error?.message || `The server returned an error (${response.status}).`);
+      error?.message || `The server returned an error (${response.status}).`, json);
   }
   return json;
 }
@@ -41,6 +42,40 @@ export function createSession() {
 
 export function getSession(id) {
   return request('GET', `/api/sessions/${encodeURIComponent(id)}`);
+}
+
+export function listSessions() {
+  return request('GET', '/api/sessions');
+}
+
+export function deleteSession(id) {
+  return request('DELETE', `/api/sessions/${encodeURIComponent(id)}`);
+}
+
+/** Runs the Java analysis of a complete session; resolves with {report}. */
+export function analyseSession(id) {
+  return request('POST', `/api/sessions/${encodeURIComponent(id)}/analysis`);
+}
+
+/** The stored report; rejects with code 'not_analysed' (409) if the session has not been analysed. */
+export function getReport(id) {
+  return request('GET', `/api/sessions/${encodeURIComponent(id)}/report`);
+}
+
+export function getModel() {
+  return request('GET', '/api/model');
+}
+
+export function deleteAllData() {
+  return request('DELETE', '/api/data', {
+    body: JSON.stringify({ confirm: 'delete all' }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+/** Where the browser can download a take as a WAV file (for opening in Praat). */
+export function wavUrl(sessionId, taskCode) {
+  return `/api/sessions/${encodeURIComponent(sessionId)}/recordings/${encodeURIComponent(taskCode)}/audio.wav`;
 }
 
 /** Uploads one take: mono float32 little-endian PCM plus its real sample rate. */

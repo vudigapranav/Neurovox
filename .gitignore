@@ -1,16 +1,36 @@
 # Build output
 target/
 
-# Visual check output (screenshots, results.json)
+# Visual and recorder check output (screenshots, results.json)
 visual-check-output/
+recorder-check-output/
 
-# Local data (recordings and database arrive in later sprints)
-data/
+# Local data: the SQLite database and every voice recording. Never commit voice data.
+/data/
 *.db
 *.db-journal
+*.db-wal
+*.db-shm
+*.f32le
+
+# Real human recordings used for validation stay on the computer that recorded them.
+validation/recordings/
+
+# Python (offline training / validation only)
+.venv/
+__pycache__/
+*.pyc
+
+# Node (no packages are used; npm may create an empty lock file)
+node_modules/
+package-lock.json
 
 # OS / editor noise
 .DS_Store
 .idea/
 *.iml
 .vscode/
+validation/synthetic/*.wav
+validation/synthetic/*.csv
+validation/synthetic/README.txt
+demo-data/

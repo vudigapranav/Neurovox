@@ -1,0 +1,11 @@
+{
+  "decision": "no_go",
+  "decidedOn": "2026-10-02",
+  "summary": "Neurovox's live measurements have not been shown to be on the same scale as the training dataset's MDVP columns, so the research model stays an offline result.",
+  "reasons": [
+    "Java agrees with Praat 6.1.38 on all 16 measurements (relative error at most 0.15 %, r = 1.000), but only on 40 synthetic vowels; no human sustained-vowel recordings were available for the comparison.",
+    "The dataset's columns carry MDVP (Kay Pentax) names and were computed from recordings and settings that are not published with it, so agreement with Praat cannot show agreement with those columns (for example, MDVP's NHR is a spectral measure, ours is Praat's autocorrelation measure).",
+    "Even within the dataset, the subject-grouped accuracy of the 16-feature model is 69.2 %, below the 75.4 % reached by always predicting the majority class (ROC-AUC 0.62), so a live indicator would carry little information."
+  ],
+  "evidence": "docs/VALIDATION.md"
+}

@@ -1,5 +1,8 @@
 package com.neurovox.server;
 
+import com.neurovox.analysis.AnalysisService;
+import com.neurovox.analysis.RecordingAnalyzer;
+import com.neurovox.ml.ResearchIndicator;
 import com.neurovox.session.SessionService;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
@@ -9,6 +12,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.time.Clock;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -23,7 +27,9 @@ import java.util.logging.Logger;
  * <pre>
  *   /api/health     JSON status
  *   /api/tasks      the four voice tasks and their durations
- *   /api/sessions   recording sessions and uploads ({@link SessionApi})
+ *   /api/sessions   recording sessions, uploads, analysis, reports, history ({@link SessionApi})
+ *   /api/model      research model and the recorded go/no-go decision
+ *   /api/data       DELETE: remove all local data
  *   /api/...        JSON 404 for anything else under /api/
  *   /               the frontend, from classpath static/
  * </pre>
@@ -41,7 +47,14 @@ public final class AppServer implements AutoCloseable {
         this.executor = executor;
     }
 
+    /** Starts with the analysis pipeline and the research model packaged in the JAR. */
     public static AppServer start(ServerConfig config, SessionService sessions) throws IOException {
+        ResearchIndicator indicator = ResearchIndicator.fromClasspath();
+        return start(config, sessions, new AnalysisService(sessions.database(), sessions, new RecordingAnalyzer(), indicator,
+                Clock.systemUTC()));
+    }
+
+    public static AppServer start(ServerConfig config, SessionService sessions, AnalysisService analysis) throws IOException {
         InetAddress loopback = InetAddress.getByAddress("localhost", new byte[] {127, 0, 0, 1});
         HttpServer server = HttpServer.create(new InetSocketAddress(loopback, config.port()), 0);
         RequestGuardFilter guard = new RequestGuardFilter(config);
@@ -49,7 +62,9 @@ public final class AppServer implements AutoCloseable {
 
         route(server, "/api/health", new ApiHandlers.Health(), guard);
         route(server, "/api/tasks", new ApiHandlers.Tasks(), guard);
-        route(server, SessionApi.PREFIX, new SessionApi(sessions, config.maxBodyBytes()), guard);
+        route(server, SessionApi.PREFIX, new SessionApi(sessions, analysis, config.maxBodyBytes()), guard);
+        route(server, "/api/model", new ApiHandlers.Model(analysis.indicator()), guard);
+        route(server, "/api/data", new ApiHandlers.LocalDataApi(sessions), guard);
         route(server, "/api/", new ApiHandlers.NotFound(), guard);
         route(server, "/", new StaticFileHandler(), guard);
 

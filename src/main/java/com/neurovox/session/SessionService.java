@@ -49,6 +49,10 @@ public final class SessionService {
         this.clock = clock;
     }
 
+    public Database database() {
+        return database;
+    }
+
     // ---------- profiles ----------
 
     public LocalProfile createProfile(String label) {
@@ -166,6 +170,23 @@ public final class SessionService {
         // Always attempt the folder too, so a retry cleans up files left by an earlier failure.
         store.deleteSessionFolder(sessionId);
         return existed;
+    }
+
+    /**
+     * Deletes every profile, session, recording file, feature and result on this computer, leaving an empty
+     * database. Returns the number of sessions removed.
+     */
+    public int deleteAllData() {
+        int removed = database.transaction(c -> {
+            int count = 0;
+            for (LocalProfile profile : profiles.findAll(c)) {
+                count += sessions.idsByProfile(c, profile.id()).size();
+                profiles.delete(c, profile.id());
+            }
+            return count;
+        });
+        store.deleteAllRecordings();
+        return removed;
     }
 
     /** Deletes a profile with all its sessions, recordings, features and results. */

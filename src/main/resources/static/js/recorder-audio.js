@@ -90,6 +90,11 @@ export class MicSession {
     if (this.pending && this.node) this.node.port.postMessage({ type: 'cancel' });
   }
 
+  /** Ends the current take early; the promise from record() resolves with what was captured so far. */
+  stopEarly() {
+    if (this.pending && this.node) this.node.port.postMessage({ type: 'stop' });
+  }
+
   /** Plays a take back through the speakers. Returns an AudioReactor for the playback (for the orb). */
   play(samples, onEnded) {
     this.stopPlayback();

@@ -103,3 +103,37 @@ test('pages load their scripts as local ES modules and keep the non-diagnostic s
   assert.match(record, /<script type="module" src="js\/record\.js"><\/script>/);
   assert.match(text(join(STATIC, 'js', 'record.js')), /does not diagnose/);
 });
+
+test('the website itself explains the whole journey in eight steps', () => {
+  const html = text(join(STATIC, 'index.html'));
+  const guide = html.slice(html.indexOf('id="guide"'), html.indexOf('id="session"'));
+  assert.ok(guide.length > 0, 'index.html needs the #guide section');
+  assert.equal((guide.match(/<li data-reveal>/g) || []).length, 8);
+  for (const phrase of [/not a diagnosis/i, /quiet room/i, /Allow microphone/, /four tasks/i, /Review this recording/, /Java/, /Read the measurements/i, /delete/i]) {
+    assert.match(guide, phrase);
+  }
+  const record = stripComments(text(join(STATIC, 'js', 'record.js')));
+  for (const label of ['Continue to room setup', 'Continue to microphone check', 'Review this recording', 'Save this take', 'Record again', 'Stop recording', 'Back']) {
+    assert.ok(record.includes(label), `recorder label "${label}"`);
+  }
+});
+
+test('report and history pages carry the disclaimer and never claim confidence or normal ranges', () => {
+  for (const page of ['results.html', 'history.html']) {
+    const html = text(join(STATIC, page));
+    assert.match(html, /does not diagnose/i, page);
+    assert.match(html, /<script type="module" src="js\/(results|history)\.js"><\/script>/, page);
+  }
+  for (const p of sources) {
+    const code = stripComments(text(p));
+    // Negations such as "No normal range is drawn" are fine; range data or confidence wording is not.
+    assert.doesNotMatch(code, /clinical confidence|confidence score|normalRange|referenceRange|typical range|healthy range/i, p);
+    assert.doesNotMatch(code, /UPDRS|Hoehn|Yahr/i, p);   // no disease-staging output anywhere
+  }
+});
+
+test('pages that show server text never use innerHTML', () => {
+  for (const name of ['record.js', 'results.js', 'history.js', 'ui.js', 'chart.js']) {
+    assert.doesNotMatch(stripComments(text(join(STATIC, 'js', name))), /innerHTML|outerHTML|insertAdjacentHTML|document\.write/, name);
+  }
+});

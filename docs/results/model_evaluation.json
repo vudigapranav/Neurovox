@@ -1,0 +1,260 @@
+{
+  "dataset": {
+    "file": "training/data/parkinsons.data",
+    "sha256": "a36116c2deac07895b79ce97a2f99a1b3720ac4892995ff5c3b9ccb397ed2bc5",
+    "recordings": 195,
+    "subject_codes": 32,
+    "pd_subjects": 24,
+    "healthy_subjects": 8,
+    "pd_recordings": 147,
+    "healthy_recordings": 48,
+    "note": "The dataset description says 31 people (23 with PD); the name column contains 32 distinct subject codes (24 PD). Grouping uses the codes as given."
+  },
+  "features": [
+    "MDVP:Fo(Hz)",
+    "MDVP:Fhi(Hz)",
+    "MDVP:Flo(Hz)",
+    "MDVP:Jitter(%)",
+    "MDVP:Jitter(Abs)",
+    "MDVP:RAP",
+    "MDVP:PPQ",
+    "Jitter:DDP",
+    "MDVP:Shimmer",
+    "MDVP:Shimmer(dB)",
+    "Shimmer:APQ3",
+    "Shimmer:APQ5",
+    "MDVP:APQ",
+    "Shimmer:DDA",
+    "NHR",
+    "HNR"
+  ],
+  "not_used": [
+    "RPDE",
+    "D2",
+    "DFA",
+    "spread1",
+    "spread2",
+    "PPE"
+  ],
+  "model": {
+    "type": "StandardScaler + LogisticRegression",
+    "C": 1.0,
+    "solver": "lbfgs",
+    "threshold": 0.5
+  },
+  "baselines": {
+    "majority_class_recording_accuracy": 0.7538461538461538,
+    "majority_class_subject_accuracy": 0.75
+  },
+  "grouped_5fold": {
+    "splitter": "StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=42)",
+    "recording_level": {
+      "n": 195,
+      "accuracy": 0.6923076923076923,
+      "balanced_accuracy": 0.5714285714285714,
+      "precision": 0.7880794701986755,
+      "recall_sensitivity": 0.8095238095238095,
+      "specificity": 0.3333333333333333,
+      "f1": 0.7986577181208053,
+      "roc_auc": 0.6217403628117915,
+      "confusion_matrix": {
+        "tn": 16,
+        "fp": 32,
+        "fn": 28,
+        "tp": 119
+      }
+    },
+    "subject_level": {
+      "n": 32,
+      "accuracy": 0.71875,
+      "balanced_accuracy": 0.6041666666666667,
+      "precision": 0.8,
+      "recall_sensitivity": 0.8333333333333334,
+      "specificity": 0.375,
+      "f1": 0.8163265306122449,
+      "roc_auc": 0.6354166666666666,
+      "confusion_matrix": {
+        "tn": 3,
+        "fp": 5,
+        "fn": 4,
+        "tp": 20
+      }
+    },
+    "folds": [
+      {
+        "fold": 1,
+        "test_recordings": 38,
+        "test_subjects": [
+          4,
+          8,
+          16,
+          21,
+          27,
+          37
+        ],
+        "test_pd_subjects": 6,
+        "test_healthy_subjects": 0,
+        "subjects_also_in_training": [],
+        "accuracy": 0.6842105263157895,
+        "balanced_accuracy": null,
+        "roc_auc": null
+      },
+      {
+        "fold": 2,
+        "test_recordings": 42,
+        "test_subjects": [
+          10,
+          19,
+          22,
+          31,
+          42,
+          43,
+          50
+        ],
+        "test_pd_subjects": 3,
+        "test_healthy_subjects": 4,
+        "subjects_also_in_training": [],
+        "accuracy": 0.5714285714285714,
+        "balanced_accuracy": 0.6180555555555556,
+        "roc_auc": 0.7222222222222222
+      },
+      {
+        "fold": 3,
+        "test_recordings": 37,
+        "test_subjects": [
+          13,
+          20,
+          26,
+          35,
+          39,
+          49
+        ],
+        "test_pd_subjects": 4,
+        "test_healthy_subjects": 2,
+        "subjects_also_in_training": [],
+        "accuracy": 0.5945945945945946,
+        "balanced_accuracy": 0.44,
+        "roc_auc": 0.7066666666666667
+      },
+      {
+        "fold": 4,
+        "test_recordings": 42,
+        "test_subjects": [
+          1,
+          5,
+          17,
+          24,
+          32,
+          33,
+          44
+        ],
+        "test_pd_subjects": 6,
+        "test_healthy_subjects": 1,
+        "subjects_also_in_training": [],
+        "accuracy": 0.8571428571428571,
+        "balanced_accuracy": 0.7083333333333333,
+        "roc_auc": 0.8796296296296297
+      },
+      {
+        "fold": 5,
+        "test_recordings": 36,
+        "test_subjects": [
+          2,
+          6,
+          7,
+          18,
+          25,
+          34
+        ],
+        "test_pd_subjects": 5,
+        "test_healthy_subjects": 1,
+        "subjects_also_in_training": [],
+        "accuracy": 0.75,
+        "balanced_accuracy": 0.85,
+        "roc_auc": 1.0
+      }
+    ]
+  },
+  "grouped_5fold_repeated": {
+    "repeats": 20,
+    "accuracy": {
+      "mean": 0.7243589743589742,
+      "sd": 0.027534664002316703,
+      "min": 0.6615384615384615,
+      "max": 0.7743589743589744
+    },
+    "balanced_accuracy": {
+      "mean": 0.6000531462585034,
+      "sd": 0.04726444832788525,
+      "min": 0.4878826530612245,
+      "max": 0.6679421768707483
+    },
+    "roc_auc": {
+      "mean": 0.6561578798185941,
+      "sd": 0.04711599143450242,
+      "min": 0.5436507936507936,
+      "max": 0.7074829931972789
+    }
+  },
+  "leave_one_subject_out": {
+    "recording_level": {
+      "n": 195,
+      "accuracy": 0.7384615384615385,
+      "balanced_accuracy": 0.6160714285714286,
+      "precision": 0.8076923076923077,
+      "recall_sensitivity": 0.8571428571428571,
+      "specificity": 0.375,
+      "f1": 0.8316831683168316,
+      "roc_auc": 0.6595804988662132,
+      "confusion_matrix": {
+        "tn": 18,
+        "fp": 30,
+        "fn": 21,
+        "tp": 126
+      }
+    },
+    "subject_level": {
+      "n": 32,
+      "accuracy": 0.78125,
+      "balanced_accuracy": 0.6875,
+      "precision": 0.84,
+      "recall_sensitivity": 0.875,
+      "specificity": 0.5,
+      "f1": 0.8571428571428571,
+      "roc_auc": 0.6510416666666666,
+      "confusion_matrix": {
+        "tn": 4,
+        "fp": 4,
+        "fn": 3,
+        "tp": 21
+      }
+    }
+  },
+  "naive_recording_5fold_LEAKY": {
+    "splitter": "StratifiedKFold(n_splits=5, shuffle=True, random_state=42) - ignores subjects",
+    "recording_level": {
+      "n": 195,
+      "accuracy": 0.8051282051282052,
+      "balanced_accuracy": 0.6953656462585034,
+      "precision": 0.8427672955974843,
+      "recall_sensitivity": 0.9115646258503401,
+      "specificity": 0.4791666666666667,
+      "f1": 0.8758169934640523,
+      "roc_auc": 0.8204365079365079,
+      "confusion_matrix": {
+        "tn": 23,
+        "fp": 25,
+        "fn": 13,
+        "tp": 134
+      }
+    },
+    "test_folds_containing_subjects_seen_in_training": 5,
+    "subject_overlaps_total": 123
+  },
+  "environment": {
+    "python": "3.13.5",
+    "scikit_learn": "1.6.1",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3"
+  }
+}

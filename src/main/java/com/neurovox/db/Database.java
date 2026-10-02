@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -23,6 +24,8 @@ public final class Database {
     public interface Work<T> {
         T apply(Connection connection) throws SQLException;
     }
+
+    private static final int SQLITE_BUSY = 5;
 
     private final Path file;
     private final String url;
@@ -53,13 +56,41 @@ public final class Database {
     /** Applies any pending migrations. Idempotent: an up-to-date database is left unchanged. */
     public void initialize() {
         try (Connection connection = connect()) {
-            try (Statement statement = connection.createStatement()) {
-                // Write-ahead logging lets readers continue while a write is in progress; the setting is stored in the file.
-                statement.execute("PRAGMA journal_mode = WAL");
-            }
+            enableWriteAheadLog(connection);
             Migrations.apply(connection);
         } catch (SQLException e) {
             throw new DataAccessException("Could not initialise the database at " + file, e);
+        }
+    }
+
+    /**
+     * Write-ahead logging lets readers continue while a write is in progress; the setting is stored in the file.
+     * Switching the journal mode needs exclusive access and SQLite reports SQLITE_BUSY at once (it does not wait for
+     * the busy timeout) if another connection is starting up at the same moment, so the switch is retried briefly.
+     */
+    private static void enableWriteAheadLog(Connection connection) throws SQLException {
+        for (int attempt = 1; ; attempt++) {
+            try (Statement statement = connection.createStatement();
+                 ResultSet rs = statement.executeQuery("PRAGMA journal_mode")) {
+                if (rs.next() && "wal".equalsIgnoreCase(rs.getString(1))) {
+                    return;
+                }
+            }
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("PRAGMA journal_mode = WAL");
+                return;
+            } catch (SQLException e) {
+                boolean busy = e.getErrorCode() == SQLITE_BUSY || String.valueOf(e.getMessage()).contains("SQLITE_BUSY");
+                if (!busy || attempt >= 100) {
+                    throw e;
+                }
+                try {
+                    Thread.sleep(10L + attempt * 5L);
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    throw e;
+                }
+            }
         }
     }
 

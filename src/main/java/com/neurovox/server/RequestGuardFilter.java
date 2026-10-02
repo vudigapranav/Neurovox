@@ -14,6 +14,10 @@ import java.util.Set;
  *   <li><b>Host header</b> must name this computer (localhost, 127.0.0.1 or [::1]) on our port.
  *       This blocks DNS-rebinding, where a web page tricks the browser into talking to a local server.</li>
  *   <li><b>Request target</b> must not exceed the configured length (414).</li>
+ *   <li><b>Origin</b> (cross-site request forgery): for anything other than GET/HEAD, a request that a browser marks
+ *       as coming from another site ({@code Origin} not this server, or {@code Sec-Fetch-Site} other than
+ *       {@code same-origin}/{@code none}) is refused (403). The Host check alone does not stop this, because a page on
+ *       another site can still send a simple POST to {@code http://localhost:8080}.</li>
  *   <li><b>Content-Length</b> must be no larger than the body limit (413), checked before any body is read.
  *       Handlers that read a body still enforce the same limit while reading, via {@link RequestBodies},
  *       so chunked uploads without a Content-Length cannot bypass it.</li>
@@ -67,6 +71,17 @@ public final class RequestGuardFilter extends Filter {
             return new HttpError(403, "forbidden_host", "Neurovox only answers requests addressed to localhost.");
         }
 
+        String method = exchange.getRequestMethod().toUpperCase(Locale.ROOT);
+        if (!method.equals("GET") && !method.equals("HEAD")) {
+            String origin = exchange.getRequestHeaders().getFirst("Origin");
+            String fetchSite = exchange.getRequestHeaders().getFirst("Sec-Fetch-Site");
+            boolean foreignOrigin = origin != null && !isLocalOrigin(origin, boundPort);
+            boolean foreignSite = fetchSite != null && !fetchSite.equals("same-origin") && !fetchSite.equals("none");
+            if (foreignOrigin || foreignSite) {
+                return new HttpError(403, "cross_origin", "Neurovox only accepts changes from its own pages.");
+            }
+        }
+
         String target = exchange.getRequestURI().toString();
         if (target.length() > config.maxUriLength()) {
             return new HttpError(414, "uri_too_long", "The request address is longer than " + config.maxUriLength() + " characters.");
@@ -88,6 +103,15 @@ public final class RequestGuardFilter extends Filter {
             }
         }
         return null;
+    }
+
+    /** True when an Origin header is http://localhost, 127.0.0.1 or [::1] on our port. */
+    static boolean isLocalOrigin(String origin, int port) {
+        String o = origin.trim().toLowerCase(Locale.ROOT);
+        if (!o.startsWith("http://")) {
+            return false;
+        }
+        return isLocalHost(o.substring("http://".length()), port);
     }
 
     /** True when the Host header is localhost, 127.0.0.1 or [::1], with our port (or no port). */

@@ -45,6 +45,14 @@ public final class ScreeningResultRepository {
         }
     }
 
+    /** Removes a session's earlier results before a re-analysis. */
+    public int deleteBySession(Connection c, long sessionId) throws SQLException {
+        try (PreparedStatement ps = c.prepareStatement("DELETE FROM screening_results WHERE session_id = ?")) {
+            ps.setLong(1, sessionId);
+            return ps.executeUpdate();
+        }
+    }
+
     public List<ScreeningResult> listBySession(Connection c, long sessionId) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement("SELECT id, session_id, sample_id, model_version, research_score, created_at "
                 + "FROM screening_results WHERE session_id = ? ORDER BY created_at, id")) {

@@ -9,8 +9,11 @@ import { tmpdir } from 'node:os';
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-/** Starts headless Chrome with a fake microphone (a synthetic tone) that is granted automatically. */
-export async function launchChrome() {
+/**
+ * Starts headless Chrome with a fake microphone that is granted automatically. By default the fake microphone plays
+ * Chrome's synthetic beep; set FAKE_AUDIO=<path.wav> (or pass {fakeAudio}) to play that file instead, in a loop.
+ */
+export async function launchChrome({ fakeAudio = process.env.FAKE_AUDIO } = {}) {
   const profile = mkdtempSync(join(tmpdir(), 'neurovox-chrome-'));
   const port = 9300 + Math.floor(Math.random() * 400);
   const proc = spawn(CHROME, [
@@ -18,6 +21,8 @@ export async function launchChrome() {
     '--no-first-run', '--no-default-browser-check', '--hide-scrollbars', '--mute-audio',
     '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream',
     '--autoplay-policy=no-user-gesture-required',
+    // The sandboxed out-of-process audio service cannot read the file (it captures silence), so run audio in-process.
+    ...(fakeAudio ? [`--use-file-for-fake-audio-capture=${fakeAudio}`, '--disable-features=AudioServiceOutOfProcess'] : []),
     '--enable-webgl', '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
     'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe'] });

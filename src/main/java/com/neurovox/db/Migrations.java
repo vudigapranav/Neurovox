@@ -92,7 +92,22 @@ final class Migrations {
               SELECT RAISE(ABORT, 'screening results cannot be moved to another sample');
             END""");
 
-    static final List<List<String>> STEPS = List.of(V1);
+    /**
+     * Migration 2 (Sprint D/H): how each sample was analysed — the quality-gate result and small facts such as the
+     * steady region used — stored as JSON next to the per-feature rows in {@code speech_features}.
+     */
+    private static final List<String> V2 = List.of(
+            """
+            CREATE TABLE sample_analyses (
+              sample_id          INTEGER NOT NULL REFERENCES voice_samples(id) ON DELETE CASCADE,
+              extractor_version  TEXT NOT NULL,
+              quality_status     TEXT NOT NULL CHECK (quality_status IN ('pass', 'warn', 'fail')),
+              details_json       TEXT NOT NULL CHECK (json_valid(details_json)),
+              computed_at        TEXT NOT NULL CHECK (computed_at %1$s),
+              PRIMARY KEY (sample_id, extractor_version)
+            )""".formatted(TIMESTAMP));
+
+    static final List<List<String>> STEPS = List.of(V1, V2);
 
     static final int LATEST_VERSION = STEPS.size();
 

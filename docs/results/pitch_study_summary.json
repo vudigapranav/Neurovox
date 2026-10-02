@@ -1,0 +1,125 @@
+{
+  "files": 40,
+  "conditions": {
+    "clean": {
+      "autocorrelation": {
+        "truth": {
+          "frames": 14014,
+          "mae_hz": 0.7725317111459968,
+          "octave_error_rate": 0.0,
+          "gross_error_rate": 0.0,
+          "voicing_recall": 0.9981099999999999,
+          "false_voicing": 0.009895
+        },
+        "ms_per_second_median": 48.689,
+        "praat": {
+          "frames": 14027,
+          "mae_hz": 0.0670633777714408,
+          "octave_error_rate": 0.0,
+          "gross_error_rate": 0.0,
+          "voicing_recall": 0.99993,
+          "false_voicing": 0.00404
+        },
+        "jitter_mae_vs_truth": 0.00160245999765028,
+        "jitter_files_measured": 40
+      },
+      "yin": {
+        "truth": {
+          "frames": 13835,
+          "mae_hz": 3.2527895916154677,
+          "octave_error_rate": 0.017997831586555837,
+          "gross_error_rate": 0.019877123238164075,
+          "voicing_recall": 0.9853425,
+          "false_voicing": 0.048997500000000006
+        },
+        "ms_per_second_median": 3.0294999999999996,
+        "praat": {
+          "frames": 13857,
+          "mae_hz": 2.2633829833297248,
+          "octave_error_rate": 0.018690914339323086,
+          "gross_error_rate": 0.019484736956051095,
+          "voicing_recall": 0.987855,
+          "false_voicing": 0.0368275
+        },
+        "jitter_mae_vs_truth": 0.0016481373423700573,
+        "jitter_files_measured": 40
+      }
+    },
+    "highpass": {
+      "autocorrelation": {
+        "truth": {
+          "frames": 13997,
+          "mae_hz": 1.0615036722154747,
+          "octave_error_rate": 0.0028577552332642708,
+          "gross_error_rate": 0.0028577552332642708,
+          "voicing_recall": 0.9969025,
+          "false_voicing": 0.00731
+        },
+        "ms_per_second_median": 46.235,
+        "jitter_mae_vs_truth": 0.001616256197943925,
+        "jitter_files_measured": 40
+      },
+      "yin": {
+        "truth": {
+          "frames": 13797,
+          "mae_hz": 3.739209088932377,
+          "octave_error_rate": 0.019569471624266144,
+          "gross_error_rate": 0.0228310502283105,
+          "voicing_recall": 0.98263,
+          "false_voicing": 0.0477075
+        },
+        "ms_per_second_median": 3.03,
+        "jitter_mae_vs_truth": 0.0018515058956272222,
+        "jitter_files_measured": 40
+      }
+    },
+    "noise": {
+      "autocorrelation": {
+        "truth": {
+          "frames": 14005,
+          "mae_hz": 0.7933483541592288,
+          "octave_error_rate": 0.0,
+          "gross_error_rate": 0.0,
+          "voicing_recall": 0.9974774999999999,
+          "false_voicing": 0.00301
+        },
+        "ms_per_second_median": 30.8565,
+        "jitter_mae_vs_truth": 0.00187452907866161,
+        "jitter_files_measured": 40
+      },
+      "yin": {
+        "truth": {
+          "frames": 13683,
+          "mae_hz": 15.274054359424104,
+          "octave_error_rate": 0.10611707958780969,
+          "gross_error_rate": 0.129211430241906,
+          "voicing_recall": 0.9745025,
+          "false_voicing": 0.01549
+        },
+        "ms_per_second_median": 3.526,
+        "jitter_mae_vs_truth": 0.00480223777738663,
+        "jitter_files_measured": 40
+      }
+    }
+  },
+  "jitter_shift_yin_vs_autocorrelation": {
+    "clean": {
+      "files": 40,
+      "mean_abs_shift": 0.0006205126432328726,
+      "median_relative_shift": 0.0014809297387257457,
+      "max_relative_shift": 0.5033038361144105
+    },
+    "highpass": {
+      "files": 40,
+      "mean_abs_shift": 0.0008441868775062476,
+      "median_relative_shift": 0.004022476604218624,
+      "max_relative_shift": 0.6897655314022167
+    },
+    "noise": {
+      "files": 40,
+      "mean_abs_shift": 0.00399310598406364,
+      "median_relative_shift": 0.06099357763157895,
+      "max_relative_shift": 2.2396818717570497
+    }
+  }
+}

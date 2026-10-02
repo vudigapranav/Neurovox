@@ -4,7 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.neurovox.analysis.AnalysisService;
+import com.neurovox.analysis.QualityReport;
+import com.neurovox.analysis.SessionReport;
+import com.neurovox.audio.AudioClip;
 import com.neurovox.audio.InvalidAudioException;
+import com.neurovox.audio.WavCodec;
 import com.neurovox.audio.PcmDecoder;
 import com.neurovox.audio.PcmSummary;
 import com.neurovox.model.RecordingSession;
@@ -16,6 +21,7 @@ import com.neurovox.session.SessionService;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,13 +32,19 @@ import java.util.Set;
 /**
  * Recording-session endpoints.
  * <pre>
- *   POST /api/sessions                              start a session       body: {} or {"profileId": 1}
- *   GET  /api/sessions/{id}                         session + recordings
- *   PUT  /api/sessions/{id}/recordings/{task}       upload one task       body: raw PCM
- *        ?sampleRate=48000&amp;format=pcm_f32le&amp;channels=1
+ *   GET    /api/sessions                                     history: sessions, newest first, with vowel measurements
+ *   POST   /api/sessions                                     start a session       body: {} or {"profileId": 1}
+ *   GET    /api/sessions/{id}                                session + recordings
+ *   DELETE /api/sessions/{id}                                delete the session, its recordings and results
+ *   PUT    /api/sessions/{id}/recordings/{task}              upload one task       body: raw PCM
+ *          ?sampleRate=48000&amp;format=pcm_f32le&amp;channels=1
+ *   GET    /api/sessions/{id}/recordings/{task}/audio.wav    the take as a 16-bit WAV (for Praat)
+ *   POST   /api/sessions/{id}/analysis                       analyse a complete session; returns the report
+ *   GET    /api/sessions/{id}/report                         the stored report (409 if not analysed yet)
  * </pre>
  * Uploads must be {@code application/octet-stream}: mono 32-bit float samples, little-endian, at the
- * browser's real sample rate. Re-uploading a task replaces the earlier take.
+ * browser's real sample rate. Each upload passes the audio-quality gate first: a take that fails is not stored and
+ * the reply (422) says what to change. Re-uploading a task replaces the earlier take.
  */
 final class SessionApi extends SafeHandler {
 
@@ -41,10 +53,12 @@ final class SessionApi extends SafeHandler {
     private static final Set<String> UPLOAD_PARAMS = Set.of("sampleRate", "format", "channels");
 
     private final SessionService sessions;
+    private final AnalysisService analysis;
     private final long globalBodyLimit;
 
-    SessionApi(SessionService sessions, long globalBodyLimit) {
+    SessionApi(SessionService sessions, AnalysisService analysis, long globalBodyLimit) {
         this.sessions = sessions;
+        this.analysis = analysis;
         this.globalBodyLimit = globalBodyLimit;
     }
 
@@ -62,14 +76,31 @@ final class SessionApi extends SafeHandler {
         String[] parts = rest.isEmpty() ? new String[0] : rest.substring(1).split("/", -1);
         try {
             if (parts.length == 0) {
-                requireMethod(exchange, "POST");
-                createSession(exchange);
+                requireMethod(exchange, "GET", "HEAD", "POST");
+                if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                    createSession(exchange);
+                } else {
+                    listSessions(exchange);
+                }
             } else if (parts.length == 1) {
+                requireMethod(exchange, "GET", "HEAD", "DELETE");
+                if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
+                    deleteSession(exchange, parseId(parts[0]));
+                } else {
+                    getSession(exchange, parseId(parts[0]));
+                }
+            } else if (parts.length == 2 && parts[1].equals("analysis")) {
+                requireMethod(exchange, "POST");
+                runAnalysis(exchange, parseId(parts[0]));
+            } else if (parts.length == 2 && parts[1].equals("report")) {
                 requireMethod(exchange, "GET", "HEAD");
-                getSession(exchange, parseId(parts[0]));
+                getReport(exchange, parseId(parts[0]));
             } else if (parts.length == 3 && parts[1].equals("recordings")) {
                 requireMethod(exchange, "PUT");
                 uploadRecording(exchange, parseId(parts[0]), parseTask(parts[2]));
+            } else if (parts.length == 4 && parts[1].equals("recordings") && parts[3].equals("audio.wav")) {
+                requireMethod(exchange, "GET", "HEAD");
+                downloadWav(exchange, parseId(parts[0]), parseTask(parts[2]));
             } else {
                 throw new HttpError(404, "no_such_endpoint", "There is no API endpoint at " + path + ".");
             }
@@ -123,6 +154,65 @@ final class SessionApi extends SafeHandler {
             return id.getAsLong();
         } catch (JsonParseException | IllegalStateException | NumberFormatException e) {
             throw HttpError.badRequest("invalid_json", "The request body is not valid JSON.");
+        }
+    }
+
+    // ---------- GET /api/sessions ----------
+
+    private void listSessions(HttpExchange exchange) throws IOException {
+        long profileId = sessions.defaultProfile().id();
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("profileId", profileId);
+        response.put("sessions", analysis.history(profileId).stream().map(JsonViews::historyEntry).toList());
+        response.put("features", JsonViews.uciCatalog());
+        Json.send(exchange, 200, response);
+    }
+
+    // ---------- DELETE /api/sessions/{id} ----------
+
+    private void deleteSession(HttpExchange exchange, long id) throws IOException {
+        if (!sessions.deleteSession(id)) {
+            throw new NotFoundException("Session " + id + " does not exist.");
+        }
+        Json.send(exchange, 200, Map.of("deleted", id));
+    }
+
+    // ---------- POST /api/sessions/{id}/analysis, GET /api/sessions/{id}/report ----------
+
+    private void runAnalysis(HttpExchange exchange, long id) throws IOException {
+        SessionReport report;
+        try {
+            report = analysis.analyze(id);
+        } catch (IllegalStateException e) {
+            throw new HttpError(409, "session_incomplete", e.getMessage());
+        }
+        Json.send(exchange, 200, Map.of("report", JsonViews.report(report)));
+    }
+
+    private void getReport(HttpExchange exchange, long id) throws IOException {
+        SessionReport report = analysis.report(id).orElseThrow(() -> new HttpError(409, "not_analysed",
+                "Session " + id + " has not been analysed yet. Complete all four tasks, then run the analysis."));
+        Json.send(exchange, 200, Map.of("report", JsonViews.report(report)));
+    }
+
+    // ---------- GET /api/sessions/{id}/recordings/{task}/audio.wav ----------
+
+    private void downloadWav(HttpExchange exchange, long id, TaskType task) throws IOException {
+        SessionDetails details = sessions.details(id).orElseThrow(() -> new NotFoundException("Session " + id + " does not exist."));
+        VoiceSample sample = details.sample(task).orElseThrow(() -> new NotFoundException(
+                "Session " + id + " has no " + task.label().toLowerCase(Locale.ROOT) + " recording."));
+        float[] pcm = PcmDecoder.decodeF32le(sessions.readRecording(sample));
+        byte[] wav = WavCodec.encode16(AudioClip.ofFloats(pcm, sample.sampleRateHz()));
+        exchange.getResponseHeaders().set("Content-Type", "audio/wav");
+        exchange.getResponseHeaders().set("Cache-Control", "no-store");
+        exchange.getResponseHeaders().set("Content-Disposition",
+                "attachment; filename=\"neurovox-session-" + id + "-" + task.code() + ".wav\"");
+        boolean head = "HEAD".equalsIgnoreCase(exchange.getRequestMethod());
+        exchange.sendResponseHeaders(200, head ? -1 : wav.length);
+        if (!head) {
+            try (OutputStream out = exchange.getResponseBody()) {
+                out.write(wav);
+            }
         }
     }
 
@@ -184,6 +274,17 @@ final class SessionApi extends SafeHandler {
         boolean replacing = sessions.details(sessionId)
                 .orElseThrow(() -> new NotFoundException("Session " + sessionId + " does not exist."))
                 .sample(task).isPresent();
+
+        // Audio-quality gate: an unusable take is not stored; the person is told what to change.
+        QualityReport quality = analysis.checkUpload(task, AudioClip.ofFloats(samples, sampleRate));
+        if (quality.status() == QualityReport.Status.FAIL) {
+            QualityReport.Check failure = quality.firstFailure().orElseThrow();
+            Map<String, Object> rejection = new LinkedHashMap<>(Json.errorBody(422, "audio_quality",
+                    failure.message() + " " + failure.recovery()));
+            rejection.put("quality", JsonViews.quality(quality));
+            Json.send(exchange, 422, rejection);
+            return;
+        }
         VoiceSample sample;
         try {
             sample = sessions.attachRecording(sessionId, task, sampleRate, body);
@@ -194,6 +295,7 @@ final class SessionApi extends SafeHandler {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("recording", JsonViews.recording(sample));
         response.put("audio", JsonViews.audio(PcmSummary.of(samples, sampleRate)));
+        response.put("quality", JsonViews.quality(quality));
         response.put("replaced", replacing);
         response.put("session", JsonViews.session(sessions.details(sessionId).orElseThrow()));
         Json.send(exchange, replacing ? 200 : 201, response);

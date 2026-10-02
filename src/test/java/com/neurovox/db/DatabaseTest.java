@@ -52,8 +52,26 @@ class DatabaseTest {
         assertEquals(Migrations.LATEST_VERSION, userVersion(db));
         assertEquals(List.of(
                 "index:idx_sessions_by_profile",
-                "table:profiles", "table:recording_sessions", "table:screening_results", "table:speech_features", "table:voice_samples",
+                "table:profiles", "table:recording_sessions", "table:sample_analyses", "table:screening_results",
+                "table:speech_features", "table:voice_samples",
                 "trigger:screening_sample_immutable", "trigger:screening_uses_sustained_vowel"), objects(db));
+    }
+
+    @Test
+    void aVersion1DatabaseIsUpgradedInPlaceWithItsDataKept() throws Exception {
+        Path file = dir.resolve("old.db");
+        // Build a database exactly as Sprint 2 left it: only migration 1, with a profile in it.
+        try (Connection c = java.sql.DriverManager.getConnection("jdbc:sqlite:" + file); Statement s = c.createStatement()) {
+            for (String sql : Migrations.STEPS.get(0)) {
+                s.execute(sql);
+            }
+            s.execute("PRAGMA user_version = 1");
+            s.execute("INSERT INTO profiles (display_name, created_at) VALUES ('Before upgrade', '2026-09-26T10:00:00.000Z')");
+        }
+        Database upgraded = Database.open(file);
+        assertEquals(Migrations.LATEST_VERSION, userVersion(upgraded));
+        assertTrue(objects(upgraded).contains("table:sample_analyses"));
+        assertEquals("Before upgrade", upgraded.read(c -> new ProfileRepository().findAll(c)).get(0).displayName());
     }
 
     @Test

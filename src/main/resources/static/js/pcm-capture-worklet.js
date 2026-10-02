@@ -2,6 +2,7 @@
 //
 // The main thread sends {type: 'start', samples: N}. The processor then copies exactly N samples
 // (downmixing to mono by averaging channels), posting them in chunks, and finishes with {type: 'done'}.
+// {type: 'stop'} ends the take early, keeping what was captured; {type: 'cancel'} discards it.
 // Counting samples here, rather than using a timer on the main thread, makes every take exactly
 // the requested length at the context's real sample rate.
 
@@ -15,6 +16,12 @@ class PcmCaptureProcessor extends AudioWorkletProcessor {
       if (data.type === 'start') {
         this.remaining = data.samples;
         this.filled = 0;
+      } else if (data.type === 'stop') {
+        if (this.remaining > 0) {
+          this.remaining = 0;
+          this.flush();
+          this.port.postMessage({ type: 'done' });
+        }
       } else if (data.type === 'cancel') {
         this.remaining = 0;
         this.filled = 0;

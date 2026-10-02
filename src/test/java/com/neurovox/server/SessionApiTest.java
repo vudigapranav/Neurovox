@@ -225,7 +225,8 @@ class SessionApiTest {
         assertEquals(404, send(HttpRequest.newBuilder(uri("/api/sessions/abc")).GET()).status());
         assertEquals(404, send(HttpRequest.newBuilder(uri("/api/sessions/0")).GET()).status());
         assertEquals(404, send(HttpRequest.newBuilder(uri("/api/sessionsX")).GET()).status());
-        assertEquals(405, send(HttpRequest.newBuilder(uri("/api/sessions")).GET()).status());
+        assertEquals(200, send(HttpRequest.newBuilder(uri("/api/sessions")).GET()).status());   // history list
+        assertEquals(405, send(HttpRequest.newBuilder(uri("/api/sessions")).PUT(HttpRequest.BodyPublishers.noBody())).status());
         assertEquals(0, storedFiles());
     }
 

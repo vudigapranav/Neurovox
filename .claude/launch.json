@@ -6,6 +6,12 @@
       "runtimeExecutable": "java",
       "runtimeArgs": ["-jar", "target/neurovox.jar"],
       "port": 8080
+    },
+    {
+      "name": "neurovox-dev",
+      "runtimeExecutable": "java",
+      "runtimeArgs": ["-jar", "target/neurovox.jar", "--port=8097", "--data-dir=target/dev-data"],
+      "port": 8097
     }
   ]
 }
