@@ -43,7 +43,7 @@ Options 3 and 4 need no microphone, so they always work in a lab.
 Two or more flags → **FURTHER CHECK SUGGESTED**, otherwise **NO CONCERN INDICATED**. The limits are the MDVP
 "threshold of pathology" values for jitter and shimmer, and the usual 20 dB for HNR.
 
-Checked against 40 synthetic vowels with known answers (`validation/make_synthetic_vowels.py`):
+Checked against 40 synthetic vowels with known answers (`web-app/validation/make_synthetic_vowels.py`):
 F0 within 0.22 Hz (r = 1.000), jitter within 0.22 %-points (r = 0.92), all 40 analysed, about 0.3 s each.
 
 ## Syllabus map (22ITC02N)

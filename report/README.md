@@ -1,7 +1,7 @@
 # Neurovox — project report
 
 Course end project report for Java Programming (22ITC02N), covering the exam (console) version in
-[`../exam-version/`](../exam-version/README.md) and a summary of the full web prototype.
+[`../exam-version/`](../exam-version/README.md) and a summary of the full web prototype in [`../web-app/`](../web-app/README.md).
 
 | File | What it is |
 |---|---|
@@ -30,8 +30,8 @@ python3 find_pages.py           # renders the PDF and updates pages.json with re
 node build.js pages.json        # rebuild so the contents pages show those numbers
 ```
 
-`figs.py` reads `validation/synthetic/syn10.wav`; create it first with
-`python3 validation/make_synthetic_vowels.py` from the repository root.
+`figs.py` reads `web-app/validation/synthetic/syn10.wav`; create it first with
+`python3 web-app/validation/make_synthetic_vowels.py` from the repository root.
 
 | In `source/` | Purpose |
 |---|---|

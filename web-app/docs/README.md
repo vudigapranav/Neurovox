@@ -18,5 +18,5 @@
 | **results/** | Generated tables, figures and data from the validation and training scripts (do not edit by hand) |
 | **screenshots/** | Screenshots of the web app |
 
-The exam version and the project report have their own folders at the top level:
-[`../exam-version/`](../exam-version/README.md) and [`../report/`](../report/README.md).
+The exam version and the project report have their own folders at the top of the repository:
+[`../../exam-version/`](../../exam-version/README.md) and [`../../report/`](../../report/README.md).

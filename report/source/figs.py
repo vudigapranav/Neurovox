@@ -127,7 +127,7 @@ axs[1].set_xlabel("time (ms)")
 fig.tight_layout(); fig.savefig(F / "demo_waves.png"); plt.close(fig)
 
 # ---------------------------------------------------------------- autocorrelation & cycle tracking on a real test vowel
-rate, w = wavfile.read(REPO / "validation/synthetic/syn10.wav")
+rate, w = wavfile.read(REPO / "web-app/validation/synthetic/syn10.wav")
 x = w.astype(float) / 32768
 x = x[len(x)//5: len(x) - len(x)//5]; x -= x.mean()
 lags = np.arange(int(rate/500), int(rate/75) + 1); L = len(x) - lags[-1]
@@ -222,8 +222,8 @@ terminal("console_errors", [L("Choice: 1", "in"), L("Say 'aaaah' steadily now...
     L("Choice: 9", "in"), L("Invalid choice.", "bad")], width=92)
 
 # copy prototype figures
-for src, dst in [("docs/screenshots/05-recording-orb.jpg", "web_record.jpg"), ("docs/screenshots/09-report-top.jpg", "web_report.jpg"),
-                 ("docs/screenshots/11-history-trend.jpg", "web_history.jpg"), ("docs/results/figures/praat_scatter.png", "praat_scatter.png"),
-                 ("docs/results/figures/pitch_study.png", "pitch_study.png")]:
+for src, dst in [("web-app/docs/screenshots/05-recording-orb.jpg", "web_record.jpg"), ("web-app/docs/screenshots/09-report-top.jpg", "web_report.jpg"),
+                 ("web-app/docs/screenshots/11-history-trend.jpg", "web_history.jpg"), ("web-app/docs/results/figures/praat_scatter.png", "praat_scatter.png"),
+                 ("web-app/docs/results/figures/pitch_study.png", "pitch_study.png")]:
     Image.open(REPO / src).convert("RGB").save(F / dst)
 print(json.dumps(stats, indent=1))
