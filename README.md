@@ -10,9 +10,16 @@ voice-to-noise balance (HNR/NHR), spectral shape (MFCC) and speech timing. Resul
 > evaluated, but the validation does not support applying it to live recordings, so the app does not show it
 > (see [docs/VALIDATION.md](docs/VALIDATION.md)).
 
-**Exam version:** a short console version (one `Main` + packages `audio` and `analysis` (four short files), no libraries) written to
-be reproduced by hand in the internal exam is in [`exam-version/`](exam-version/README.md). The project report (Word and PDF) is in [`report/`](report/README.md).
-Run it with `javac Main.java audio/*.java analysis/*.java && java Main`.
+## Where things are
+
+| Folder | What is in it |
+|---|---|
+| [`exam-version/`](exam-version/README.md) | **Exam version:** short console program (`Main` + packages `audio` and `analysis`, four files, no libraries) to write by hand in the internal exam. Run: `javac Main.java audio/*.java analysis/*.java && java Main` |
+| [`report/`](report/README.md) | **Project report** in Word and PDF, with the scripts and figures that build it |
+| [`docs/`](docs/README.md) | All other documents: planning, architecture, validation, presentation, team notes |
+| `src/` | The full web application (Java backend + website) |
+| `training/`, `validation/`, `scripts/` | Model training, validation studies, browser checks |
+| `pom.xml`, `mvnw`, `mvnw.cmd`, `.mvn/` | Maven build files for the web application (keep at the top level) |
 
 **Status (2 Oct 2026):** all planned sprints are implemented. 174 Java tests and 31 frontend tests pass, and the
 end-to-end browser check passes. The things that remain unproven are listed under [Known limitations](#known-limitations).
@@ -188,7 +195,10 @@ src/main/resources/model/  research-model.json (exported) and research-gate.json
 training/                  offline Python training (dataset included, CC BY 4.0)
 validation/                synthetic vowel generator, Praat comparison, pitch-study summary
 scripts/                   headless-Chrome checks
-docs/                      architecture, Java walkthrough, validation, demo script, team hand-off, results
+docs/                      architecture, Java walkthrough, validation (top level); planning/, presentation/,
+                           team/, results/, screenshots/
+exam-version/              the short console version for the exam (Main + audio/ + analysis/)
+report/                    the project report (.docx, .pdf) and its build scripts
 ```
 
 ## 10. Further documents
@@ -196,10 +206,10 @@ docs/                      architecture, Java walkthrough, validation, demo scri
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — package/class map and request-to-result data flow
 - [docs/JAVA_WALKTHROUGH.md](docs/JAVA_WALKTHROUGH.md) — every important class and formula in plain language
 - [docs/VALIDATION.md](docs/VALIDATION.md) — model results, Praat comparison, pitch study, limitations, sources
-- [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) — 3-minute demo click path and backup path
-- [docs/TEAM_HANDOFF.md](docs/TEAM_HANDOFF.md) — setup for each teammate and how to collaborate without sharing recordings
-- [docs/PRESENTATION_INPUTS.md](docs/PRESENTATION_INPUTS.md) — verified numbers, diagram, code excerpts and screenshots for the slides
-- [PROJECT_CHECKLIST.md](PROJECT_CHECKLIST.md) — sprint-by-sprint record with evidence
+- [docs/presentation/DEMO_SCRIPT.md](docs/presentation/DEMO_SCRIPT.md) — 3-minute demo click path and backup path
+- [docs/team/TEAM_HANDOFF.md](docs/team/TEAM_HANDOFF.md) — setup for each teammate and how to collaborate without sharing recordings
+- [docs/presentation/PRESENTATION_INPUTS.md](docs/presentation/PRESENTATION_INPUTS.md) — verified numbers, diagram, code excerpts and screenshots for the slides
+- [docs/planning/PROJECT_CHECKLIST.md](docs/planning/PROJECT_CHECKLIST.md) — sprint-by-sprint record with evidence
 
 ## Known limitations
 

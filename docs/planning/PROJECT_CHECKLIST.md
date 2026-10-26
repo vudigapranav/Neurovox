@@ -1,7 +1,7 @@
 # Neurovox — Project Checklist
 
 Progress record for the build. A sprint is marked done only when its checks pass; evidence is listed under each.
-The three planning documents (`neurovox-01…03`) are reference material and are not edited. The completion request
+The three planning documents (`docs/planning/01…03`) are reference material and are not edited. The completion request
 (2 Oct 2026) organised the remaining work as sprints **A–I**; the table maps them to the planning document’s numbers.
 
 | Sprint | Scope | Status |
@@ -181,7 +181,7 @@ staging wording), end-to-end screenshots `docs/screenshots/`.
 - [x] Security/privacy: cross-origin guard for state-changing requests (Origin / Sec-Fetch-Site), Host check, size
       limits, CSP, owner-only files, no external requests, recordings and databases ignored by Git.
 - [x] Documentation: README (rewritten), `docs/ARCHITECTURE.md`, `docs/JAVA_WALKTHROUGH.md`, `docs/VALIDATION.md`,
-      `docs/TEAM_HANDOFF.md`, `docs/DEMO_SCRIPT.md`, `docs/PRESENTATION_INPUTS.md`, `training/README.md`.
+      `docs/team/TEAM_HANDOFF.md`, `docs/presentation/DEMO_SCRIPT.md`, `docs/presentation/PRESENTATION_INPUTS.md`, `training/README.md`.
 
 ### Evidence
 `docs/results/pitch_study.md`: autocorrelation 0.00 % octave errors (clean and 6 dB noise) vs YIN 1.80 % / 10.61 %;

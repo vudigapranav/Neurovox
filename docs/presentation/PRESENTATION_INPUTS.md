@@ -1,6 +1,6 @@
 # Presentation inputs
 
-Verified material for the slides (deck brief: `neurovox-03-presentation-brief.md`). Every number below is copied
+Verified material for the slides (deck brief: `docs/planning/03-presentation-brief.md`). Every number below is copied
 from a generated results file named next to it; re-run the scripts and update this file if anything changes.
 Screenshots are real captures of the app, made by the automated browser check with a **synthetic voice** as the
 microphone — say so if you show them.
@@ -67,7 +67,7 @@ human voices; a stage or severity.
  report, history, trends  ◀── JSON ────────────  stored report
 ```
 Colour split for slide 8: browser column muted, Java column in Signal teal — everything analytical is Java.
-A Mermaid version is in [ARCHITECTURE.md](ARCHITECTURE.md).
+A Mermaid version is in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
 ## Code excerpts (copied from the source, unchanged)
 

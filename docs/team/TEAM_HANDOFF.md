@@ -31,7 +31,7 @@ The split follows the proposal’s seams; everyone should still be able to run t
 | Features, Praat comparison, model, inference, gate | `features/`, `ml/`, `training/`, `validation/` | Praat table (VALIDATION §2), grouped vs leaky results (§5), Java = scikit-learn to 1e-9 |
 | Application: server, database, frontend guidance, quality gate, demo | `server/`, `db/`, `session/`, `storage/`, `analysis/`, `static/` | API table (ARCHITECTURE), security guards, end-to-end check, DEMO_SCRIPT |
 
-Use [JAVA_WALKTHROUGH.md](JAVA_WALKTHROUGH.md) to prepare: each class has its responsibility, input/output, key
+Use [JAVA_WALKTHROUGH.md](../JAVA_WALKTHROUGH.md) to prepare: each class has its responsibility, input/output, key
 method and formula, plus a table of likely viva questions.
 
 ## 3. Collaborating without sharing recordings
