@@ -10,6 +10,10 @@ voice-to-noise balance (HNR/NHR), spectral shape (MFCC) and speech timing. Resul
 > evaluated, but the validation does not support applying it to live recordings, so the app does not show it
 > (see [docs/VALIDATION.md](docs/VALIDATION.md)).
 
+**Exam version:** a short console version (one `Main` + packages `audio` and `analysis`, no libraries) written to
+be reproduced by hand in the internal exam is in [`exam-version/`](exam-version/README.md).
+Run it with `javac Main.java audio/*.java analysis/*.java && java Main`.
+
 **Status (2 Oct 2026):** all planned sprints are implemented. 174 Java tests and 31 frontend tests pass, and the
 end-to-end browser check passes. The things that remain unproven are listed under [Known limitations](#known-limitations).
 
