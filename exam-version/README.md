@@ -1,8 +1,8 @@
-# Neurovox — exam version (console, 3 files)
+# Neurovox — exam version (console, 4 files)
 
 A short, hand-writable version of Neurovox for the Java Programming (22ITC02N, R22A) internal exam.
 Same idea as the full app — screen a sustained "aah" for voice irregularities linked to Parkinson's — but in
-**plain Java with no libraries**, one `Main` class and **two packages**.
+**plain Java with no libraries**, one `Main` class and **two packages**, with no file longer than about 120 lines.
 
 > Not a medical device. It does not diagnose; it only flags a voice that should be checked by a doctor.
 
@@ -10,9 +10,11 @@ Same idea as the full app — screen a sustained "aah" for voice irregularities 
 
 ```
 exam-version/
-├── Main.java                    menu, threads, collections, file history   (default package)
-├── audio/VoiceSource.java       package audio    — where the voice comes from
-└── analysis/VoiceAnalyzer.java  package analysis — pitch, jitter, shimmer, HNR, result
+├── Main.java                    menu, thread, collections, file history     (default package, 119 lines)
+├── audio/VoiceSource.java       package audio — where the voice comes from (118 lines)
+└── analysis/
+    ├── PitchTracker.java        package analysis — finds every vocal cycle   (69 lines)
+    └── VoiceReport.java         package analysis — jitter, shimmer, HNR, result (89 lines)
 ```
 
 ## Run it (any JDK 11 or newer)
@@ -31,7 +33,7 @@ Options 3 and 4 need no microphone, so they always work in a lab.
 
 ## What it measures
 
-| Measure | How (in `VoiceAnalyzer`) | Flag if |
+| Measure | How (`PitchTracker` finds the cycles, `VoiceReport` computes) | Flag if |
 |---|---|---|
 | Pitch F0 | autocorrelation finds the rough period; then each cycle is matched to the next (cross-correlation) | — |
 | Jitter | average change in cycle length from one cycle to the next ÷ mean cycle length | > 1.04 % |
@@ -48,28 +50,29 @@ F0 within 0.22 Hz (r = 1.000), jitter within 0.22 %-points (r = 0.92), all 40 an
 
 | Unit | Topic | Where |
 |---|---|---|
-| I | classes, objects, constructors, access modifiers | all three files |
+| I | classes, objects, constructors, access modifiers | all four files |
 | I | constructor overloading, `this(...)` | `Microphone()`, `Demo()` |
 | I | `static`, `final` | `RATE`, limits, `public static final class WavFile` |
-| I | arrays, Strings, `StringTokenizer`, `Scanner` | `analyze()`, `showHistory()`, `main()` |
+| I | arrays, Strings, `StringTokenizer`, `Scanner` | `PitchTracker`, `showHistory()`, `main()` |
 | II | abstract class and abstract methods | `VoiceSource` |
 | II | inheritance, `super`, method overriding | `Microphone`, `WavFile`, `Demo` |
 | II | preventing inheritance | `final class WavFile` |
-| II | `Object` class (`toString`) | `VoiceSource`, `VoiceAnalyzer` |
+| II | `Object` class (`toString`) | `VoiceSource`, `VoiceReport` |
 | II | dynamic method dispatch | `voice.load()` in `Main.screen()` |
 | II | inner (static nested) classes | `VoiceException`, `Microphone`, `WavFile`, `Demo` |
-| II | interfaces | `VoiceAnalyzer implements Runnable, Comparable` |
+| II | interfaces | `VoiceReport implements Runnable, Comparable` |
 | II | packages, import, CLASSPATH | `audio`, `analysis` |
+| I | default (package-private) access | `PitchTracker.periods`, `peaks`, `similarity` read by `VoiceReport` |
 | III | user-defined exception, `throw`, `throws` | `VoiceException` |
 | III | `try`, multiple `catch`, multi-catch, `finally`, try-with-resources | `run()`, `load()`, `screen()` |
 | III | threads, `start`, `join`, synchronization | `Main.screen()`, `finish()` / `isDone()` |
-| III | generics | `List<Double>`, `Map<String, Double>`, `printAll<T>()` |
-| IV | `ArrayList`, `LinkedHashMap`, `Iterator`, `Comparable` | `VoiceAnalyzer`, `compare()` |
+| III | generics | `List<Double>`, `Map<String, Double>`, `mean(List<Double>)`, `printAll<T>()` |
+| IV | `ArrayList`, `LinkedHashMap`, `Iterator`, `Comparable` | `PitchTracker`, `VoiceReport`, `compare()` |
 | IV | Java 8: lambda, streams | `session.stream().filter(v -> ...)` |
 | V | `FileWriter`, `BufferedWriter`, `FileReader`, `BufferedReader` | `saveHistory()`, `showHistory()` |
 
 ## Writing it in the exam
 
 Must write (about 250 lines): `Main.main()` and `screen()`, `VoiceSource` with `VoiceException` and `Demo`,
-the whole `VoiceAnalyzer`. Can be left out if time is short, and the program still compiles if you also remove
-their menu lines: the `Microphone` class, `WavFile`, `compare()`, `saveHistory()` / `showHistory()`.
+`PitchTracker` and `VoiceReport`. Can be left out if time is short, and the program still compiles if you also
+remove their menu lines: the `Microphone` class, `WavFile`, `compare()`, `saveHistory()` / `showHistory()`.

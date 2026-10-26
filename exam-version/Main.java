@@ -1,4 +1,4 @@
-import analysis.VoiceAnalyzer;
+import analysis.VoiceReport;
 import audio.VoiceSource;
 import audio.VoiceSource.*;
 
@@ -9,7 +9,7 @@ import java.util.*;
 // It does not diagnose: it only flags voices that should be checked by a doctor.
 public class Main {
     static final String HISTORY = "history.csv";
-    static List<VoiceAnalyzer> session = new ArrayList<>();
+    static List<VoiceReport> session = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -50,7 +50,7 @@ public class Main {
             if (voice instanceof Microphone) System.out.println("Say 'aaaah' steadily now...");
             voice.load();                        // dynamic method dispatch
 
-            VoiceAnalyzer a = new VoiceAnalyzer(voice);
+            VoiceReport a = new VoiceReport(voice);
             Thread worker = new Thread(a, "analyzer");
             worker.start();
             System.out.print("Analysing");
@@ -79,13 +79,13 @@ public class Main {
         }
         Collections.sort(session);               // uses compareTo (lowest jitter first)
         System.out.println("This session, steadiest voice first:");
-        Iterator<VoiceAnalyzer> it = session.iterator();
+        Iterator<VoiceReport> it = session.iterator();
         while (it.hasNext()) System.out.println("  " + it.next());
         long flagged = session.stream().filter(v -> v.needsFurtherCheck()).count();   // lambda
         System.out.println("Flagged for further check: " + flagged + " of " + session.size());
     }
 
-    static void saveHistory(String name, VoiceAnalyzer a) throws IOException {
+    static void saveHistory(String name, VoiceReport a) throws IOException {
         try (BufferedWriter w = new BufferedWriter(new FileWriter(HISTORY, true))) {
             w.write(name + "," + new Date() + "," + a.toCsv());
             w.newLine();
