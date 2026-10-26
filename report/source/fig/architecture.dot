@@ -1,0 +1,15 @@
+digraph G { fontname="Helvetica"; node [fontname="Helvetica", fontsize=11, style="rounded,filled", fillcolor="#f4effa", color="#6b3fa0", penwidth=1.2]; edge [fontname="Helvetica", fontsize=9, color="#555555"]; rankdir=LR; nodesep=0.35; ranksep=0.45;
+  user [label="User\n(says 'aaah')", shape=box, fillcolor="#fde9f1", color="#d0457b"];
+  subgraph cluster_audio { label="package audio"; style="rounded,dashed"; color="#999999"; fontsize=11;
+    vs [label="VoiceSource\n«abstract»", shape=box];
+    mic [label="Microphone", shape=box]; wav [label="WavFile\n«final»", shape=box]; demo [label="Demo", shape=box]; }
+  subgraph cluster_analysis { label="package analysis"; style="rounded,dashed"; color="#999999"; fontsize=11;
+    va [label="VoiceReport\n«Runnable, Comparable»", shape=box]; pt [label="PitchTracker\nfinds every cycle", shape=box]; }
+  subgraph cluster_main { label="default package"; style="rounded,dashed"; color="#999999"; fontsize=11;
+    main [label="Main\nmenu · thread · history", shape=box, fillcolor="#e8f1fb", color="#2e6aa8"]; }
+  hist [label="history.csv", shape=cylinder, fillcolor="#fff7e0", color="#b48a00"];
+  rec  [label="recording.wav", shape=cylinder, fillcolor="#fff7e0", color="#b48a00"];
+  user -> main [label="menu choice"]; main -> vs [label="load()"];
+  vs -> mic [dir=back, arrowtail=empty, label="extends"]; vs -> wav [dir=back, arrowtail=empty]; vs -> demo [dir=back, arrowtail=empty];
+  mic -> rec [style=dashed]; main -> va [dir=both, label="  thread  "]; va -> pt [label="new"]; pt -> vs [label="getSamples()", style=dashed];
+  main -> hist [label="BufferedWriter"]; }

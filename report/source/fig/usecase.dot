@@ -1,0 +1,8 @@
+digraph G { fontname="Helvetica"; node [fontname="Helvetica", fontsize=11, style="rounded,filled", fillcolor="#f4effa", color="#6b3fa0", penwidth=1.2]; edge [fontname="Helvetica", fontsize=9, color="#555555"]; rankdir=LR; nodesep=0.25;
+  u [label="User / Patient", shape=box, fillcolor="#fde9f1", color="#d0457b"];
+  subgraph cluster_s { label="Neurovox (console)"; style="rounded"; color="#6b3fa0";
+    node [shape=ellipse, fillcolor="#ffffff"];
+    r1 [label="Record voice"]; r2 [label="Analyse WAV file"]; r3 [label="Run demo voice"];
+    r4 [label="View screening report"]; r5 [label="Compare session"]; r6 [label="View saved history"]; }
+  u -> r1; u -> r2; u -> r3; u -> r5; u -> r6;
+  r1 -> r4 [style=dashed, label="«include»"]; r2 -> r4 [style=dashed]; r3 -> r4 [style=dashed]; }

@@ -1,0 +1,124 @@
+===== NEUROVOX : Voice-based Parkinson's Screening =====
+Patient name: 
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: Analysing....
+Voice : Demo steady voice (3.0 s at 44100 Hz)
+Cycles: 250
+Pitch F0 (Hz) :  139.95
+Jitter (%)    :    0.30
+Shimmer (%)   :    2.35
+HNR (dB)      :   35.06
+Limits: jitter <= 1.04 %, shimmer <= 3.81 %, HNR >= 20 dB
+Markers outside limits: 0 of 3
+RESULT: NO CONCERN INDICATED
+--------------------------------------------------
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: Analysing...
+Voice : Demo shaky voice (3.0 s at 44100 Hz)
+Cycles: 250
+Pitch F0 (Hz) :  139.90
+Jitter (%)    :    2.21
+Shimmer (%)   :   13.57
+HNR (dB)      :   16.58
+Limits: jitter <= 1.04 %, shimmer <= 3.81 %, HNR >= 20 dB
+Markers outside limits: 3 of 3
+RESULT: FURTHER CHECK SUGGESTED (see a neurologist)
+--------------------------------------------------
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: WAV file path: Analysing......
+Voice : WAV syn10.wav (4.2 s at 44100 Hz)
+Cycles: 370
+Pitch F0 (Hz) :  149.31
+Jitter (%)    :    0.75
+Shimmer (%)   :    5.41
+HNR (dB)      :   21.24
+Limits: jitter <= 1.04 %, shimmer <= 3.81 %, HNR >= 20 dB
+Markers outside limits: 1 of 3
+RESULT: NO CONCERN INDICATED
+--------------------------------------------------
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: This session, steadiest voice first:
+  Demo steady voice  jitter  0.30 %  shimmer  2.35 %  HNR 35.1 dB -> OK
+  WAV syn10.wav      jitter  0.75 %  shimmer  5.41 %  HNR 21.2 dB -> OK
+  Demo shaky voice   jitter  2.21 %  shimmer 13.57 %  HNR 16.6 dB -> CHECK
+Flagged for further check: 1 of 3
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: Saved history:
+  Pranav     Mon Oct 26 13:45:35 IST 2026 F0  139.9  J  0.30%  S  2.35%  HNR  35.1  OK
+  Pranav     Mon Oct 26 13:45:35 IST 2026 F0  139.9  J  2.21%  S 13.57%  HNR  16.6  CHECK
+  Pranav     Mon Oct 26 13:45:35 IST 2026 F0  149.3  J  0.75%  S  5.41%  HNR  21.2  OK
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: Say 'aaaah' steadily now...
+
+Check failed: Microphone not available: No line matching interface TargetDataLine supporting format PCM_SIGNED 44100.0 Hz, 16 bit, mono, 2 bytes/frame, little-endian is supported.
+--------------------------------------------------
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: WAV file path: 
+Check failed: Cannot read noise.wav: noise.wav (No such file or directory)
+--------------------------------------------------
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: Invalid choice.
+
+1. Record my voice (5 s 'aah')
+2. Analyse a WAV file
+3. Demo - steady voice
+4. Demo - shaky voice
+5. Compare this session
+6. View saved history
+0. Exit
+Choice: Goodbye.

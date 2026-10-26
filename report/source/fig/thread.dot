@@ -1,0 +1,5 @@
+digraph G { fontname="Helvetica"; node [fontname="Helvetica", fontsize=11, style="rounded,filled", fillcolor="#f4effa", color="#6b3fa0", penwidth=1.2]; edge [fontname="Helvetica", fontsize=9, color="#555555"]; rankdir=LR; nodesep=0.3; node [shape=box];
+  n [label="NEW\nnew Thread(a)"]; r [label="RUNNABLE\nstart()"]; ru [label="RUNNING\nrun() → new PitchTracker()"];
+  w [label="main: TIMED_WAITING\nThread.sleep(50) + isDone()", fillcolor="#e8f1fb", color="#2e6aa8"];
+  t [label="TERMINATED\nfinish(): done = true"]; j [label="main: join()\nthen report()", fillcolor="#e8f1fb", color="#2e6aa8"];
+  n->r->ru->t->j; ru->w [style=dashed, label="meanwhile"]; w->j [style=dashed]; }

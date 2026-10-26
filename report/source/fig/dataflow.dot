@@ -1,0 +1,11 @@
+digraph G { fontname="Helvetica"; node [fontname="Helvetica", fontsize=11, style="rounded,filled", fillcolor="#f4effa", color="#6b3fa0", penwidth=1.2]; edge [fontname="Helvetica", fontsize=9, color="#555555"]; rankdir=TB; nodesep=0.3; ranksep=0.28; node [shape=box, width=3.6];
+  a [label="1. Voice input\nmicrophone (5 s) · WAV file · built-in demo", fillcolor="#fde9f1", color="#d0457b"];
+  b [label="2. Decode 16-bit PCM bytes → samples in [-1, +1]"];
+  c [label="3. Checks: length ≥ 2 s · keep middle 60 % · remove DC · loudness"];
+  d [label="4. Rough pitch period: autocorrelation over 75–500 Hz"];
+  e [label="5. Cycle tracking: cross-correlation of neighbouring cycles\n+ parabolic interpolation → exact cycle lengths and peak heights"];
+  f [label="6. Measures: F0 · jitter · shimmer · HNR"];
+  g [label="7. Compare with reference limits → markers (0–3)"];
+  h [label="8. Result: ≥ 2 markers → FURTHER CHECK SUGGESTED\notherwise NO CONCERN INDICATED", fillcolor="#e8f1fb", color="#2e6aa8"];
+  i [label="9. Report on screen + row appended to history.csv", fillcolor="#fff7e0", color="#b48a00"];
+  a->b->c->d->e->f->g->h->i; }

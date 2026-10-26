@@ -1,0 +1,34 @@
+digraph G { fontname="Helvetica"; rankdir=BT; nodesep=0.4; ranksep=0.55;
+  node [shape=plain, fontname="Helvetica", fontsize=10]; edge [fontname="Helvetica", fontsize=9, color="#555555"];
+  vs [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#6b3fa0" bgcolor="#f4effa">
+   <tr><td><i><b>VoiceSource</b></i> «abstract»</td></tr><hr/>
+   <tr><td align="left">+ RATE : float {static final}<br align="left"/># samples : double[]<br align="left"/># rate : float<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ <i>load() : void</i> throws VoiceException<br align="left"/>+ <i>getName() : String</i><br align="left"/>+ getSamples(), getRate()<br align="left"/>+ toString() : String<br align="left"/># toSamples(byte[], int) : double[]<br align="left"/></td></tr></table>>];
+  mic [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#6b3fa0" bgcolor="#ffffff">
+   <tr><td><b>Microphone</b></td></tr><hr/><tr><td align="left">- seconds : int<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ Microphone(), Microphone(int)<br align="left"/>+ load()<br align="left"/></td></tr></table>>];
+  wav [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#6b3fa0" bgcolor="#ffffff">
+   <tr><td><b>WavFile</b> «final»</td></tr><hr/><tr><td align="left">- path : String<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ WavFile(String)<br align="left"/>+ load()<br align="left"/></td></tr></table>>];
+  demo [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#6b3fa0" bgcolor="#ffffff">
+   <tr><td><b>Demo</b></td></tr><hr/><tr><td align="left">- shaky : boolean<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ Demo(), Demo(boolean)<br align="left"/>+ load()<br align="left"/></td></tr></table>>];
+  ex [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#b0413e" bgcolor="#fdeeee">
+   <tr><td><b>VoiceException</b></td></tr><hr/><tr><td align="left">+ VoiceException(String)<br align="left"/></td></tr></table>>];
+  exc [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" color="#999999"><tr><td>java.lang.Exception</td></tr></table>>];
+  va [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#2e6aa8" bgcolor="#e8f1fb">
+   <tr><td><b>VoiceReport</b></td></tr><hr/>
+   <tr><td align="left">+ F0, JITTER, SHIMMER, HNR : String<br align="left"/>+ JITTER_LIMIT, SHIMMER_LIMIT, HNR_LIMIT<br align="left"/>- features : Map&lt;String, Double&gt;<br align="left"/>- error : String ; - done : boolean<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ run() ; + isDone() {synchronized}<br align="left"/>~ mean(List&lt;Double&gt;), change(List&lt;Double&gt;)<br align="left"/>+ markers() : int ; + needsFurtherCheck()<br align="left"/>+ report() ; + toCsv() ; + compareTo()<br align="left"/></td></tr></table>>];
+  pt [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#2e6aa8" bgcolor="#e8f1fb">
+   <tr><td><b>PitchTracker</b></td></tr><hr/>
+   <tr><td align="left">~ periods, peaks : List&lt;Double&gt;<br align="left"/>~ similarity : double<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ PitchTracker(VoiceSource) throws VoiceException<br align="left"/>~ corr(double[], int, int, int) : double<br align="left"/></td></tr></table>>];
+  ifs [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" color="#999999"><tr><td>«interface» Runnable</td></tr><tr><td>«interface» Comparable&lt;VoiceReport&gt;</td></tr></table>>];
+  main [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="3" color="#555555" bgcolor="#f6f6f6">
+   <tr><td><b>Main</b></td></tr><hr/><tr><td align="left">- session : List&lt;VoiceReport&gt;<br align="left"/></td></tr><hr/>
+   <tr><td align="left">+ main(String[])<br align="left"/>~ screen(), compare()<br align="left"/>~ saveHistory(), showHistory()<br align="left"/>~ &lt;T&gt; printAll(String, List&lt;T&gt;)<br align="left"/></td></tr></table>>];
+  mic -> vs [arrowhead=empty]; wav -> vs [arrowhead=empty]; demo -> vs [arrowhead=empty];
+  ex -> exc [arrowhead=empty]; va -> ifs [arrowhead=empty, style=dashed, label="implements"];
+  va -> pt [arrowhead=vee, style=dashed, label="creates"]; pt -> vs [arrowhead=vee, style=dashed, label="uses"]; main -> va [arrowhead=vee, style=dashed, label="creates"];
+  main -> vs [arrowhead=vee, style=dashed]; }
