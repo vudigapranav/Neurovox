@@ -15,6 +15,7 @@ further.
 | Folder | Contents |
 |---|---|
 | [`exam-version/`](exam-version/README.md) | Short console program for the internal exam: `Main` + packages `audio` and `analysis` (4 files, no libraries) |
+| [`exam-short/`](exam-short/README.md) | Smallest exam version: `Main.java` + `FeatureExtractor.java` (2 files), with exam notes and viva Q&A PDFs |
 | [`web-app/`](web-app/README.md) | Full web application: Java backend, website, database, validation studies, all documentation |
 | [`report/`](report/README.md) | Project report in Word and PDF, with the scripts and figures that build it |
 
