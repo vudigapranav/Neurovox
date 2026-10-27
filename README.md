@@ -46,6 +46,13 @@ Needs JDK 17 or newer and a browser. Maven is downloaded automatically by the wr
 
 ```bash
 cd web-app
+npm run dev                 # builds if needed, starts the server, opens the browser
+```
+
+Without Node.js:
+
+```bash
+cd web-app
 ./mvnw clean package        # Windows: mvnw.cmd clean package
 java -jar target/neurovox.jar
 ```

@@ -35,6 +35,11 @@ Internet access is needed once, for Maven to download dependencies. After that N
 
 ## 2. Build and run
 
+**Shortcut (needs Node.js):** `npm run dev` builds the app if the code changed, starts it and opens
+http://localhost:8080 in your browser. `npm start` only starts an already-built JAR. Press Ctrl+C to stop.
+
+Or do it by hand:
+
 ```bash
 ./mvnw clean package
 ```
